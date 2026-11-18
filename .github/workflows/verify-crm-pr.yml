@@ -1,0 +1,207 @@
+# CI paused 2026-10-25 (Actions minutes exhausted). Restore the original triggers to re-enable.
+# Prova do verify-crm ANTES do merge.
+#
+# O veredito em verify-crm-verifier.yml é workflow_run: o GitHub só dispara
+# o arquivo que está na branch default, então ele não roda neste PR. Este
+# workflow dispara em pull_request, no ubuntu-latest do GitHub, onde o
+# `supabase start` do e2e.yml já sobe. A ponte Docker desta VM de agente
+# não é o lugar dessa prova.
+#
+# Caminhos: skill, harness, workflows de verificação e preparo do Node.
+# Fora disso, re-run manual escolhendo o branch do PR.
+#
+# Fork não entra: o `if` exige head deste repositório. Segredo de Actions
+# não vai para fork. Sem os três OPENCODE_* o cold-start sai 2 e o job
+# fica vermelho — blocked, não pass. O passo não tem `exit 0` depois.
+#
+# Não comenta no PR e não é o veredito. Verde do ci.yml continua não sendo
+# veredito. Este job só mede o drive de workbench-run.
+#
+# control-crm, doctor, drive, observe e cleanup vêm da branch default
+# (git archive), com VERIFY_CRM_ROOT no checkout deste PR. Enquanto
+# origin/<default> não tiver control-crm, o job sai blocked e não executa
+# a cópia do PR com OPENCODE_API_KEY. O upload só corre depois dessa
+# cópia confiável: evidência escrita por script do head não sobe.
+#
+# Furo que permanece: pull_request usa o YAML deste arquivo como está no
+# PR. Um branch do mesmo repositório que edite este workflow ainda define
+# o job. O gatilho que confia no base ref não é usado neste arquivo.
+#
+# Sem GitHub Environment. Required reviewers não está disponível neste
+# repositório privado sem GitHub Pro. O portão é a cópia da branch
+# default. Os três OPENCODE_* são secrets de repositório e ganham do
+# arquivo .cursor/skills/verify-crm/opencode.env quando não estão vazios.
+# O arquivo é só o fallback. Apagá-lo não tira a chave do histórico:
+# o dono revoga no OpenCode depois da prova.
+# Settings > Secrets and variables > Actions > New repository secret
+#   OPENCODE_API_KEY, OPENCODE_BASE_URL, OPENCODE_MODEL
+name: verify-crm-pr
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-crm-pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  provar:
+    if: github.repository == 'helsome/AiNativeCrm' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+      VERIFY_CRM_EVIDENCE_ROOT: /tmp/verify-crm-evidence
+      VERIFY_CRM_ARTIFACT_ROOT: /tmp/verify-crm-artifacts
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/preparar-node
+        timeout-minutes: 5
+
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.117.0
+
+      - name: Harness da branch default
+        id: trusted
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.event.repository.default_branch }}"
+          ref="origin/${{ github.event.repository.default_branch }}"
+          if ! git cat-file -e "${ref}:.cursor/skills/verify-crm/scripts/control-crm"; then
+            echo "blocked: default branch has no control-crm; refusing to run this pull request's copy with OPENCODE_API_KEY"
+            exit 2
+          fi
+          rm -rf /tmp/verify-crm-trusted
+          mkdir -p /tmp/verify-crm-trusted
+          git archive "$ref" .cursor/skills/verify-crm scripts/verify-crm | tar -x -C /tmp/verify-crm-trusted
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/verify-crm-trusted/node_modules
+          chmod +x /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm
+          # O script confiável mora em /tmp. Sem este elo, o Node resolve
+          # `pg` e `playwright` a partir de /tmp e não acha o node_modules
+          # do checkout.
+          ln -sfn "${GITHUB_WORKSPACE}/node_modules" /tmp/verify-crm-trusted/node_modules
+
+      - name: Carregar credenciais OpenCode
+        if: steps.trusted.outcome == 'success'
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          VERIFY_CRM_MODEL_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_BASE_URL: ${{ secrets.OPENCODE_BASE_URL }}
+          OPENCODE_MODEL: ${{ secrets.OPENCODE_MODEL }}
+          OPENCODE_E2E_MODEL_ID: ${{ secrets.OPENCODE_MODEL }}
+        run: bash /tmp/verify-crm-trusted/scripts/verify-crm/carregar-opencode-env.sh
+
+      - name: Cold start
+        id: cold
+        if: steps.trusted.outcome == 'success'
+        run: |
+          set +e
+          pnpm exec tsx /tmp/verify-crm-trusted/scripts/verify-crm/cold-start.ts
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            echo "blocked: cold-start exited $code"
+            exit "$code"
+          fi
+
+      - name: Bibliotecas do Chromium
+        if: steps.trusted.outcome == 'success'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Preparar dependência Playwright do harness
+        if: steps.trusted.outcome == 'success'
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const testRoot = path.dirname(require.resolve("@playwright/test/package.json"));
+          const installed = path.dirname(require.resolve("playwright/package.json", { paths: [testRoot] }));
+          const target = path.resolve("node_modules/playwright");
+          if (!fs.existsSync(target)) fs.symlinkSync(installed, target, "dir");
+          require("playwright");
+          NODE
+
+      - name: Subir a instância
+        id: launch
+        if: steps.trusted.outcome == 'success'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+          # O `next build` desta etapa estoura o heap padrão (~2 GB) no
+          # typecheck, com o mesmo OOM do PR de missão. `--max-old-space-size`
+          # pode ir em NODE_OPTIONS; `--env-file` não pode (os workers recusam).
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: |
+          set -euo pipefail
+          # pnpm deixa `playwright` só dentro de `.pnpm`. O launch copiado da
+          # branch default exige o diretório `node_modules/playwright`.
+          if [ ! -d node_modules/playwright ]; then
+            playwright_dir="$(echo node_modules/.pnpm/playwright@*/node_modules/playwright)"
+            if [ ! -d "$playwright_dir" ]; then
+              echo "playwright package is not in the pnpm store" >&2
+              exit 1
+            fi
+            ln -s "$(cd "$playwright_dir" && pwd)" node_modules/playwright
+          fi
+          /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm launch
+
+      - name: Doctor antes da chave
+        if: steps.trusted.outcome == 'success' && steps.launch.outcome == 'success'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: |
+          set +e
+          /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm doctor
+          code=$?
+          # 2 é o esperado antes de gravar a chave (credential_missing).
+          # 1 é instância quebrada: blocked, não segue para o drive.
+          if [ "$code" -eq 0 ] || [ "$code" -eq 2 ]; then
+            exit 0
+          fi
+          echo "blocked: doctor exited $code"
+          exit "$code"
+
+      - name: Dirigir workbench-run
+        if: steps.trusted.outcome == 'success' && steps.launch.outcome == 'success'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: |
+          set +e
+          /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm drive workbench-run
+          code=$?
+          set -e
+          if [ "$code" -eq 2 ]; then
+            echo "doctor exited 2 after the timeline was visible"
+            exit 0
+          fi
+          if [ "$code" -ne 0 ]; then
+            echo "blocked: drive exited $code"
+            exit "$code"
+          fi
+
+      - name: Abrir cada tela inalcançável uma vez
+        if: always() && steps.trusted.outcome == 'success' && steps.launch.outcome == 'success'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm observe-unreachable
+
+      - name: Publicar a evidência
+        if: always() && steps.trusted.outcome == 'success'
+        uses: actions/upload-artifact@v7
+        with:
+          name: verify-crm-pr-${{ github.run_id }}
+          path: |
+            /tmp/verify-crm-evidence
+            /tmp/verify-crm-artifacts
+            /tmp/verify-crm
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Limpar a instância
+        if: always() && steps.trusted.outcome == 'success' && (steps.launch.outcome == 'success' || steps.launch.outcome == 'failure')
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm cleanup || true

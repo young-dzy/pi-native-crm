@@ -1,0 +1,195 @@
+# CI paused 2026-10-25 (Actions minutes exhausted). Restore the original triggers to re-enable.
+# Veredito independente, depois do workflow `ci`.
+#
+# `workflow_run` usa o arquivo que está na branch default. Este job passa a
+# existir para os PRs seguintes depois do merge na main. O verde de
+# `.github/workflows/ci.yml` não é o veredito: o comentário diz PASS,
+# PASS+NOTES ou FAIL conforme o drive com control-crm.
+# Green ci.yml is not the verdict.
+#
+# Um head de outro repositório não é executado. O checkout do head, quando
+# acontece, é só depois de ci verde, secrets presentes e head deste
+# repositório. control-crm, doctor, drive e o comentário saem da cópia
+# feita ANTES desse checkout. O head não roda com OPENCODE_API_KEY.
+# VERIFY_CRM_ROOT aponta o checkout do head (o app sob teste). O upload
+# é a evidência escrita por essa cópia, não por script do head.
+#
+# Sem GitHub Environment (required reviewers não está disponível neste
+# repositório privado sem GitHub Pro). Secrets do repositório ganham de
+# .cursor/skills/verify-crm/opencode.env, lido no checkout da branch
+# default, antes do checkout do head. Secret vazio cai no arquivo.
+# A chave fica no histórico do git para sempre; apagar o arquivo não
+# revoga. O dono revoga no OpenCode depois da prova.
+#   OPENCODE_API_KEY, OPENCODE_BASE_URL, OPENCODE_MODEL
+# OPENCODE_BASE_URL desta chave: https://opencode.ai/zen/go/v1
+# OPENCODE_MODEL: cat-jam-free
+name: verify-crm-verifier
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: verify-crm-verifier-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+
+jobs:
+  dirigir:
+    if: github.event.workflow_run.event == 'pull_request' && github.repository == 'helsome/AiNativeCrm'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+      VERIFY_CRM_EVIDENCE_ROOT: /tmp/verify-crm-evidence
+      VERIFY_CRM_ARTIFACT_ROOT: /tmp/verify-crm-artifacts
+    steps:
+      - name: Checkout da branch default
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Copiar o harness da branch default
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/verify-crm-trusted
+          mkdir -p /tmp/verify-crm-trusted
+          git archive HEAD .cursor/skills/verify-crm scripts/verify-crm | tar -x -C /tmp/verify-crm-trusted
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/verify-crm-trusted/node_modules
+          chmod +x /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm
+
+      - uses: ./.github/actions/preparar-node
+        timeout-minutes: 5
+
+      - name: Carregar credenciais OpenCode
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          VERIFY_CRM_MODEL_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_BASE_URL: ${{ secrets.OPENCODE_BASE_URL }}
+          OPENCODE_MODEL: ${{ secrets.OPENCODE_MODEL }}
+          OPENCODE_E2E_MODEL_ID: ${{ secrets.OPENCODE_MODEL }}
+        run: bash scripts/verify-crm/carregar-opencode-env.sh
+
+      - name: Resolver o pull request
+        id: alvo
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_RUN_ID: ${{ github.event.workflow_run.id }}
+          VERIFY_HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+          VERIFY_HEAD_SHA_DO_RUN: ${{ github.event.workflow_run.head_sha }}
+          VERIFY_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: pnpm exec tsx /tmp/verify-crm-trusted/scripts/verify-crm/resolver-alvo.ts
+
+      - name: Checkout do head
+        if: steps.alvo.outputs.drive == 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.alvo.outputs.head_sha }}
+          clean: true
+          fetch-depth: 1
+
+      - uses: ./.github/actions/preparar-node
+        if: steps.alvo.outputs.drive == 'true'
+        timeout-minutes: 5
+
+      - uses: supabase/setup-cli@v3
+        if: steps.alvo.outputs.drive == 'true'
+        with:
+          version: 2.117.0
+
+      - name: Diff parent..head
+        id: diff
+        if: steps.alvo.outputs.drive == 'true'
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ steps.alvo.outputs.parent_sha }}"
+          git diff --stat "${{ steps.alvo.outputs.parent_sha }}" HEAD > /tmp/verify-crm-diff-stat.txt || true
+          echo "arquivo=/tmp/verify-crm-diff-stat.txt" >> "$GITHUB_OUTPUT"
+
+      - name: Preparar dependência Playwright do harness
+        if: steps.alvo.outputs.drive == 'true'
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const testRoot = path.dirname(require.resolve("@playwright/test/package.json"));
+          const installed = path.dirname(require.resolve("playwright/package.json", { paths: [testRoot] }));
+          const target = path.resolve("node_modules/playwright");
+          if (!fs.existsSync(target)) fs.symlinkSync(installed, target, "dir");
+          require("playwright");
+          NODE
+
+      - name: Subir a instância
+        id: launch
+        if: steps.alvo.outputs.drive == 'true'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm launch
+
+      - name: Doctor antes da chave
+        if: steps.launch.outcome == 'success'
+        continue-on-error: true
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm doctor
+
+      - name: Dirigir workbench-run
+        id: drive
+        if: steps.launch.outcome == 'success'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: |
+          set +e
+          /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm drive workbench-run
+          code=$?
+          set -e
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          inst="$(ls -1d /tmp/verify-crm/*/instance.json 2>/dev/null | tail -1 || true)"
+          if [ -n "$inst" ]; then
+            run_id="$(node -e 'const fs=require("fs"); process.stdout.write(JSON.parse(fs.readFileSync(process.argv[1],"utf8")).runId)' "$inst")"
+            result="/tmp/verify-crm-evidence/${run_id}/workbench-run/result.json"
+            if [ -f "$result" ]; then
+              echo "result=$result" >> "$GITHUB_OUTPUT"
+              echo "evidence=/tmp/verify-crm-evidence/${run_id}" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+          exit 0
+
+      - name: Abrir cada tela inalcançável uma vez
+        if: steps.launch.outcome == 'success'
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm observe-unreachable
+
+      - name: Limpar a instância
+        if: always() && (steps.launch.outcome == 'success' || steps.launch.outcome == 'failure')
+        env:
+          VERIFY_CRM_ROOT: ${{ github.workspace }}
+        run: /tmp/verify-crm-trusted/.cursor/skills/verify-crm/scripts/control-crm cleanup || true
+
+      - name: Comentar o veredito
+        if: always() && steps.alvo.outputs.pr != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_PR: ${{ steps.alvo.outputs.pr }}
+          VERIFY_PARENT_SHA: ${{ steps.alvo.outputs.parent_sha }}
+          VERIFY_HEAD_SHA: ${{ steps.alvo.outputs.head_sha }}
+          VERIFY_CI_VERDE: ${{ steps.alvo.outputs.ci_verde }}
+          VERIFY_MESMO_REPOSITORIO: ${{ steps.alvo.outputs.mesmo }}
+          VERIFY_SEGREDOS: ${{ steps.alvo.outputs.segredos }}
+          VERIFY_DRIVE_EXIT: ${{ steps.drive.outputs.code }}
+          VERIFY_RESULT_JSON: ${{ steps.drive.outputs.result }}
+          VERIFY_EVIDENCE: ${{ steps.drive.outputs.evidence }}
+          VERIFY_DIFF_STAT: ${{ steps.diff.outputs.arquivo }}
+        run: pnpm exec tsx /tmp/verify-crm-trusted/scripts/verify-crm/publicar-veredito.ts
+
+      - uses: actions/upload-artifact@v7
+        if: always() && steps.alvo.outputs.drive == 'true'
+        with:
+          name: verify-crm-verifier-${{ github.run_id }}
+          path: /tmp/verify-crm-evidence
+          retention-days: 7
+          if-no-files-found: ignore
