@@ -6,6 +6,8 @@ Agent 读取客户与商机，消费知识与记忆，通过受治理的工具�
 
 [交互演示](examples/chat-first-demo) · [架构说明](docs/architecture) · [更新日志](CHANGELOG.md) · [原始项目说明](docs/PROJECT-README.md)
 
+<img src="docs/assets/workbench.png" alt="Agent 工作台：目标商机、执行模式、执行时间线与待确认动作在同一屏" width="100%">
+
 ---
 
 ## 这个仓库怎么读
@@ -32,6 +34,8 @@ Agent 读取客户与商机，消费知识与记忆，通过受治理的工具�
 | 8 | 评测与可观测：四类场景判据、第三态判定、四项 Rubric、trace 与成本归集 | 约束是否有效，要用断言量出来，而不是靠自述 |
 | 9 | 前端：Agent 工作台时间线、CRM 侧页面、371 个 API 路由、只读与行动模式 | 界面是数据模型与权限边界的投影 |
 | 10 | 演示与文档：零密钥静态演示、架构文档、验收记录、测试 | 让上面九层可以被别人独立复核 |
+
+<img src="docs/assets/runtime-architecture.png" alt="运行时架构：任务入口、上下文装配、Agent 循环、执行边界与工具端口" width="100%">
 
 ---
 
@@ -70,6 +74,8 @@ node scripts/serve-agent-demo.mjs
 ```
 
 完整系统需要 Node 22、pnpm、Supabase 与 Redis，模型凭据按组织绑定。配置项见 `.env.example`，步骤见 `docs/SETUP.md`。
+
+<img src="docs/assets/capability-lab.png" alt="能力实验室：运行至人工批准关卡，左侧为逐步执行记录，右侧为按版本组织的知识来源" width="100%">
 
 ---
 
