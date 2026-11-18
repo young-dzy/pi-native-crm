@@ -1,0 +1,16 @@
+{
+  "runId": "563a7d9d-41eb-4d26-9106-e7fc007fe424",
+  "missionId": "161f67a4-5442-4b52-b2a7-d02fde73d885",
+  "concurrentAppends": 16,
+  "cancellationEvents": 1,
+  "contiguousThrough": 18,
+  "wrongTenantRejected": true,
+  "redaction": "pass",
+  "result": "pass",
+  "executePrivileges": {
+    "anon": false,
+    "authenticated": false,
+    "service_role": true
+  },
+  "migrationReapplied": "pass"
+}

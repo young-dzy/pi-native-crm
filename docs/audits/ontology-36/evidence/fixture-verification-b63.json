@@ -1,0 +1,13 @@
+{
+  "manifestSha256": "9a2c692672b57ee4aa8a1f08c0d5bc7af990083ccf7a7d44a3f6b3da9ab33615",
+  "oracleSha256": "2f173aaba29fcd1ec35889dae105dad8bdcbde0356682615381c02f13604f72e",
+  "counts": {
+    "pipelines": 3,
+    "stages": 3,
+    "contacts": 3,
+    "leads": 8,
+    "activities": 3,
+    "tasks": 2
+  },
+  "oracleMatches": true
+}

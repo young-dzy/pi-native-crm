@@ -1,0 +1,10 @@
+{
+  "observedAt": "2026-11-14T09:16:15.825684Z",
+  "provider": "openrouter",
+  "model": "codex/gpt-6-luna",
+  "scope": "isolated synthetic evaluation catalog only",
+  "before": {"input_price_per_million_cents": 0, "output_price_per_million_cents": 0},
+  "after": {"input_price_per_million_cents": null, "output_price_per_million_cents": null},
+  "reason": "The gateway model price is not verified; zero was an erroneous catalog placeholder.",
+  "measurementImpact": "The Workbench Model Gateway computes cost from pricing.ts by model and provider, not these catalog prices. This model has no matching static price and the observed costCents is null. The catalog change occurred during the paired run and is disclosed as a configuration change; actual billing remains unknown."
+}
