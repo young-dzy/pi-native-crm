@@ -4,7 +4,7 @@
 
 Agent 读取客户与商机，消费知识与记忆，通过受治理的工具推进业务；人能看到它做了什么、依据什么，以及 CRM 发生了哪些变化。
 
-[交互演示](examples/chat-first-demo) · [架构说明](docs/architecture) · [更新日志](CHANGELOG.md) · [原始项目说明](docs/PROJECT-README.md)
+[在线演示](https://pi-native-crm.app.workbuddy.host/?sharecode=ATEVGXWN6Y) · [演示站源码](examples/chat-first-demo) · [架构说明](docs/architecture) · [更新日志](CHANGELOG.md) · [原始项目说明](docs/PROJECT-README.md)
 
 <img src="docs/assets/workbench.png" alt="Agent 工作台：目标商机、执行模式、执行时间线与待确认动作在同一屏" width="100%">
 
