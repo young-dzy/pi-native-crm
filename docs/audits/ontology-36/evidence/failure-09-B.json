@@ -1,0 +1,32 @@
+{
+  "arm": "B",
+  "job": {
+    "id": "62deb4d4-f9de-47f9-b2e6-8916b10483a4",
+    "status": "pending",
+    "attempts": 1,
+    "lastError": "ontology_eval_failed"
+  },
+  "case": "09",
+  "runId": "3e6b8d39-b1ca-45a8-9743-94e2340b5212",
+  "errorCode": null,
+  "runStatus": "running",
+  "eventTypes": [
+    "run_started",
+    "context_loaded",
+    "context_loaded",
+    "tool_started",
+    "model_decision",
+    "tool_completed",
+    "tool_started",
+    "tool_started",
+    "tool_started",
+    "tool_completed",
+    "tool_completed",
+    "model_decision",
+    "model_decision"
+  ],
+  "usageEvents": [],
+  "capturedAt": "2026-11-14T09:14:06.427744+00:00",
+  "classification": "worker exception; underlying provider failure code unavailable in run receipt",
+  "retryObserved": "one claim; job pending, no retry executed by evaluator"
+}

@@ -1,0 +1,23 @@
+/* Same timing contract as the product. Fixture events only; no progress theatre. */
+@keyframes crm-entry { from { opacity:0;transform:translateY(5px) } to { opacity:1;transform:none } }
+@keyframes crm-press { 50% { transform:scale(.97) } }
+.motion-new { animation:crm-entry 160ms ease-out both }
+.agent-send { transition:transform 100ms ease-out }
+.agent-send:active:not(:disabled) { transform:scale(.97) }
+.motion-pressed { animation:crm-press 100ms ease-out }
+.typing-dots { animation:none!important }
+.motion-status { display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0 12px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:.875rem;background:var(--surface) }
+.motion-status small { font-size:.75rem;color:var(--muted) }
+.motion-status[data-state=failed],.motion-status[data-state=cancelled] { animation:none;transition:none }
+.motion-disclosure { margin-top:12px;min-width:0 }
+.motion-disclosure-toggle { border:0;background:transparent;color:var(--accent);display:flex;gap:8px;align-items:center;max-width:100%;min-height:36px;padding:6px 0;text-align:left;font-size:.875rem;line-height:1.5 }
+.motion-chevron { width:14px;flex:none;transition:transform 190ms ease-out }
+.motion-disclosure[data-open=true]>.motion-disclosure-toggle .motion-chevron { transform:rotate(90deg) }
+.motion-disclosure-region { display:grid;grid-template-rows:0fr;transition:grid-template-rows 190ms ease-out }
+.motion-disclosure[data-open=true]>.motion-disclosure-region { grid-template-rows:1fr }
+.motion-disclosure-content { min-height:0;overflow:hidden;overflow-wrap:anywhere }
+.motion-disclosure-content>div { padding:8px 0 4px }
+.motion-disclosure pre { white-space:pre-wrap;overflow-wrap:anywhere;max-width:100% }
+.motion-info { margin:12px 0;font-size:.875rem;color:var(--muted);line-height:1.6 }
+@media(max-width:680px){.motion-status{align-items:flex-start}.motion-status small{width:100%}.agent-composer-tools{flex-wrap:wrap}.motion-disclosure-toggle{font-size:.875rem}}
+@media(prefers-reduced-motion:reduce){.motion-new,.motion-pressed,.agent-send,.motion-disclosure-region,.motion-chevron{animation:none!important;transition:none!important;transform:none!important}.agent-send:active:not(:disabled){transform:none!important}}

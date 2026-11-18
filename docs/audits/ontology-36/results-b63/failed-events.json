@@ -1,0 +1,357 @@
+{
+  "rawPath": "/Users/helson/code/ontology-eval-stack/full-b63.jsonl",
+  "rawSha256": "7c1a7208adf59a5a041dc6b081651ddb26f4d877dd8df0a12e11fb294944c98c",
+  "capturedAt": "2026-11-14T09:19:58.285Z",
+  "recovered": [
+    {
+      "id": "09",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "3e6b8d39-b1ca-45a8-9743-94e2340b5212",
+      "events": [
+        {
+          "payload": {
+            "tool": "crm_search_contacts",
+            "toolCallId": "call_e7e101bd34b24115a47f0185926d5144"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_contact",
+            "toolCallId": "call_e1aea7e48de6454e8bab477f4cbf5fdd__rk16__kxNy0uo7mqlxAUiS"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_list_leads",
+            "toolCallId": "call_eaf79d31b69f49fc92db2ab081a3d58e"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_list_conversations",
+            "toolCallId": "call_5ce4cc4892c04652be5d5d3e6381df9a"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "15",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "836bb5e0-f1f1-42a1-9e6d-2da8063813f3",
+      "events": [
+        {
+          "payload": {
+            "tool": "ontology_check_answerable",
+            "toolCallId": "call_13af6dfa2ef0472cb4d2f2e64af8db2a"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_54e42f069a124e6d8ed06c2bded73f0d"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "18",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "70cdf475-8330-4c41-8a5c-508f17facdbd",
+      "events": [
+        {
+          "payload": {
+            "tool": "ontology_check_answerable",
+            "toolCallId": "call_f0eee92a606e44ba8240e48063287f5d"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_bcbf2c4300644d1b8aa7d529f775857f"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "ontology_search_terms",
+            "toolCallId": "call_a57f2fce83704be58762c949093e5eee__rk16__hho_6DC3SUMJh-kc"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "26",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "4399876b-16f1-43c4-a2b3-4eb04a810dea",
+      "events": [
+        {
+          "payload": {
+            "tool": "ontology_check_answerable",
+            "toolCallId": "call_56a330424f584b419159041e2aa1615a"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_c85ba7889d164e33969b11d19a92ce29"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "27",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "c64fc9e2-65db-4f89-9a6a-a543ad20220c",
+      "events": [
+        {
+          "payload": {
+            "tool": "ontology_check_answerable",
+            "toolCallId": "call_ceb3451dfa04412d9655886e6dd6b915"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_c2f27dc2d43c4c3abc3edd5dda2ec7ee"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "33",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "d0abca17-a2d4-446b-9adf-e8debf58a3bf",
+      "events": [
+        {
+          "payload": {
+            "tool": "ontology_check_answerable",
+            "toolCallId": "call_edd970cdcf0e494aa6cb4d1dc60c8c56"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "ontology_describe_action",
+            "toolCallId": "call_bfdbd47572c541a494c3783b6deb9f07"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "38",
+      "arm": "A",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "42d66af4-6449-4432-be49-68717f939bc8",
+      "events": [
+        {
+          "payload": {
+            "tool": "crm_list_conversations",
+            "toolCallId": "call_41eacd62b0814261b8e9c4943d478aa4"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_list_conversations",
+            "toolCallId": "call_d174985aa299404d8eb39e7e8ed99c10__rk16__QOjBMKNfPfwo4LUU"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_0a51fe3cebff496bb689ddf2f1bd6df5__rk16__0p35Y1l6z8IzC-6-"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_search_knowledge",
+            "toolCallId": "call_59c8042fd67243a6a4693cd2c0c0d849"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "40",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "0f691230-7539-4433-9a56-d51927c9ec2b",
+      "events": [
+        {
+          "payload": {
+            "tool": "crm_search_contacts",
+            "toolCallId": "call_16cd22724b0247b99130b901cfa612f1"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_list_leads",
+            "toolCallId": "call_f0ff4f6342d34b468d452363629025fd"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_lead",
+            "toolCallId": "call_e18ff6c2eb384e5f85471565688e15e9"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_7fe46bec37b9456e9483f53474deb29a"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_get_lead",
+            "toolCallId": "call_61086f0c5470494790f66cf4446bab35"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "41",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "51b7f719-eb0f-4fb4-9bc9-87eadc8d9e15",
+      "events": [
+        {
+          "payload": {
+            "tool": "crm_get_org_memory",
+            "toolCallId": "call_765079891f7741cb90482c0d050bad09"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "ontology_search_terms",
+            "toolCallId": "call_963cd43395d34bf7b63c2f7aae515e0b"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    },
+    {
+      "id": "43",
+      "arm": "B",
+      "job": {
+        "status": "pending",
+        "attempts": 1,
+        "lastError": "ontology_eval_failed"
+      },
+      "runId": "2222cfd3-502c-4c14-baaa-21337d830565",
+      "events": [
+        {
+          "payload": {
+            "tool": "ontology_check_answerable",
+            "toolCallId": "call_f99274b4178b46f39d173ca250dbdcba"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "ontology_query",
+            "toolCallId": "call_7ff32c5eb0664f78b26632b4911b419f"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "ontology_search_terms",
+            "toolCallId": "call_e56763bc4f3c4ce681aa9dfb7606f82f__rk16__EtmBpkjxWZPgelsR"
+          },
+          "event_type": "tool_started"
+        },
+        {
+          "payload": {
+            "tool": "crm_search_knowledge",
+            "toolCallId": "call_ebf6d10653254dcca6068e406d93241e"
+          },
+          "event_type": "tool_started"
+        }
+      ],
+      "errorCode": null,
+      "runStatus": "running"
+    }
+  ]
+}

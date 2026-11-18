@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Repository preview preserving existing recorded-real-model playback, with narrow shared-motion parity to the privacy-minimized public Site; not whole-site byte equality",
+  "sourceReference": "25b6f97699b0c71152c96d784b4cefae9d63e5bc",
+  "historicalReportReference": "fc80b14dc88406ab6f5e6ec3ed9ca61d632c0674",
+  "sha256": {
+    ".gitignore": "1dda7942c6002a70c97d3f50886605adac3d13ce598b954f7c96f6dc3e475039",
+    "README.md": "116db1705aad7ea0d8f370253f03afcff264ab5926349b2ab4c5957c864d1614",
+    "dist/agent-services.css": "ffec36c83531c589eb97a8d23977f821ea0288bdca4a8665fc54df72baeba2c5",
+    "dist/agent-services.js": "d1b23d54bbca087b6848e4442679a3a8ecad9bb21643a67901378e7d629e1e6f",
+    "dist/app.js": "6a385025991d70dc3921d31bf11784ed5846ca930e45ae49ba28c0060fe082c9",
+    "dist/catalog.js": "27307ab43355601f7fd4b58d4125089e2c3692c2114d63fe7519a4e7247a5568",
+    "dist/demo-engine.js": "cb1fba112f20c638145ac6ebf2e072b5e0ffff868b625d7bdca65b90d547fc61",
+    "dist/demo-fixtures.js": "4271728637f9b34309dfe9d8115ea0ea7347a4b0abf2016c24b857d9e6156df8",
+    "dist/demo-lab.css": "85f551e8ea09be78e0e0024169e800f9a69413670163804587a6355fd9797222",
+    "dist/demo-lab.js": "2870abb36a81e5d918960c97e75472d462eb11a26933fb3e8955947fca7dfbc8",
+    "dist/full-ui.js": "80a7065cc722d1a9828289fbb1e70c3ee3addf923b4156226fc808bc2c9f34af",
+    "dist/index.html": "50dfb9a6519b225cdb86ad6201086f15e4c7f29f45926e77659bd6bb9a51360a",
+    "dist/inspection.css": "32d14390e28de821c855f0f3ab8d1a85dc0b2ee7f31be297c22822a7a52cc88c",
+    "dist/inspection.js": "b8c90a96606aa670149f2a686a8123fc55bb100ddb2bb2c2ba9586913a697ed0",
+    "dist/modern.css": "2a302f5dd261bdbd1208d4879b503e0fa3009b8e49b2b214abae43df0df931c0",
+    "dist/motion.css": "c29d46313258161db5b94634bfdd3a3c40bd36a76fd045d8ba1610bfa7299484",
+    "dist/motion.js": "23bd7638dbdf41adb013120746e8d139555f5689b7f68b99f244c453bde027d7",
+    "dist/real-recordings.js": "82d9725c32caaccd07fa429dbc923f20a0887dc98cfe407f0519bb019c02fecf",
+    "dist/style.css": "26eadc9a19996e3801a080fc4704388fb4dd68403beee6b78b9f2039e6250673",
+    "package-lock.json": "816757053d1fcb548599bc00237dc8269ef13a858dc668019febb286a51ea461",
+    "package.json": "dbc47e72c6796efc9f577358626dd7ddb07ba9569141f72965f076fe484a44c4",
+    "tests/agent-services-dom.cjs": "1d42fc79b1626d6e6dc868ee1671b20d2dba263325b3f15a0c52a106bca74610",
+    "tests/chat-dom.cjs": "4fc0454a4867e6425a68ae81ac15e25ca2c5b524379154c5fb8621c5570a0026",
+    "tests/coverage.json": "715c03e0a99546386ad0a1101f57333fabc1b919423249c530cf7787ca7e1f4d",
+    "tests/full-smoke.cjs": "aae0d621d7ffe6203f4195eaaa669a799cea8ee65f0d24ee23417f18cb34ae67",
+    "tests/inspection-dom.cjs": "244552b9c48eff1aa71cec2455bda6fed42069e16338865b76092278039987a5",
+    "tests/motion-dom.cjs": "aaa0a9756db25b69cd87c395f15e35e7268985b64fd40452a5a779937ae16fd6",
+    "tests/no-outbound-links-dom.cjs": "9d45ac572545c42bfa8124f265632966cce4c412e9d1277bcd88a07f5a9aaac9",
+    "tests/real-recordings.cjs": "3aa6a3d1ec01e9b5e5be70eb8d1bcba40991c343561e3caa0f390b08bb5448f3",
+    "tests/runtime-lab-dom.cjs": "339939315cd43fdaa310901cb84645eb201bb086ff21c5a5f3f970f5aed6ec22",
+    "tests/runtime-lab.cjs": "5bc249ba8080937c44f1780191b0d3481214dcf3efc59f11d2c095141f1fc499",
+    "tests/smoke.cjs": "216f2f07384e04515f4fbbb51a17a9ea05c1dccfcf73b50428acda86687b3307",
+    "tests/visual-style.cjs": "d8927c408ed183200803b5a660a550bd30e40ace6494c17b0b3d4927adc1b34c"
+  },
+  "visualTheme": "neutral-sans-2026-10-02",
+  "integrationPreview": {
+    "realProvidersConnected": false,
+    "allProvidersDefaultOff": true,
+    "credentialsAccepted": false,
+    "serviceStatePersistence": "none",
+    "sourceAlignedUi": true
+  },
+  "recordedRealModelEvidence": {
+    "date": "2026-10-03",
+    "syntheticCustomer": true,
+    "provider": "opencode",
+    "model": "space-bunny-free",
+    "fixture": "../../docs/testing/fixtures/agent-services-real-2026-10-03.json",
+    "replayCallsModels": false,
+    "hiddenReasoningIncluded": false,
+    "credentialsIncluded": false,
+    "rawCustomerToolBodiesIncluded": false
+  },
+  "publicSite": {
+    "url": "https://pinative-crm-demo.free-ball-7539.chatgpt.site",
+    "access": "public",
+    "version": 9,
+    "sourceCommit": "acd09a467d7fa45b410a10e35137fe2d729b52bb",
+    "sharedFiles": {
+      "dist/app.js": "6a385025991d70dc3921d31bf11784ed5846ca930e45ae49ba28c0060fe082c9",
+      "dist/full-ui.js": "80a7065cc722d1a9828289fbb1e70c3ee3addf923b4156226fc808bc2c9f34af",
+      "dist/demo-fixtures.js": "4271728637f9b34309dfe9d8115ea0ea7347a4b0abf2016c24b857d9e6156df8",
+      "dist/motion.js": "23bd7638dbdf41adb013120746e8d139555f5689b7f68b99f244c453bde027d7",
+      "dist/motion.css": "c29d46313258161db5b94634bfdd3a3c40bd36a76fd045d8ba1610bfa7299484",
+      "tests/motion-dom.cjs": "aaa0a9756db25b69cd87c395f15e35e7268985b64fd40452a5a779937ae16fd6",
+      "dist/demo-lab.js": "2870abb36a81e5d918960c97e75472d462eb11a26933fb3e8955947fca7dfbc8",
+      "dist/inspection.js": "b8c90a96606aa670149f2a686a8123fc55bb100ddb2bb2c2ba9586913a697ed0",
+      "tests/no-outbound-links-dom.cjs": "9d45ac572545c42bfa8124f265632966cce4c412e9d1277bcd88a07f5a9aaac9"
+    },
+    "intentionallyNotPublished": [
+      "dist/real-recordings.js",
+      "recorded-real-model replay UI",
+      "recording export and underlying fixture"
+    ],
+    "wholePreviewByteIdentical": false,
+    "navigationParity": "all visitor-facing repository links replaced with non-interactive provenance text in both variants; recorded-real-model evidence remains repository-only"
+  },
+  "motionPreview": {
+    "entryMs": 160,
+    "entryYpx": 5,
+    "pressMs": 100,
+    "disclosureMs": 190,
+    "bottomFollowPx": 48,
+    "newLocalTasksOnly": true,
+    "syntheticEventsOnly": true,
+    "reducedMotion": true
+  },
+  "visitorNavigation": {
+    "outboundRepositoryLinks": false,
+    "provenance": "non-interactive text",
+    "renderedRoutesChecked": 62,
+    "dynamicPanelsChecked": [
+      "inspection",
+      "services",
+      "runtime-lab",
+      "history",
+      "source-provenance",
+      "route-action-dialogs",
+      "route-tabs"
+    ],
+    "noOutboundLinksDom": "passed",
+    "browserPixels": "not run; generated-DOM verification only"
+  }
+}

@@ -191,3 +191,13 @@ __pycache__/
 # Session notes belong in docs/handoffs/, not the repository root.
 /HANDOFF*.md
 /RELATORIO-*.md
+
+# 本地工具配置（不公开）
+.agents/
+.changes/
+.claude/
+.codex/
+.cursor/
+.specs/
+.git-msg/
+/.git-msg*
